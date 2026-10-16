@@ -229,6 +229,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--index", type=int, default=0, help="plan index in ResPlan.pkl")
     ap.add_argument("--pkl", default="ResPlan.pkl")
+    ap.add_argument("--json", help="Path to a ResPlan JSON input")
     ap.add_argument("--dev-probe-nodes", action="store_true",
                     help="DEV ONLY: made-up probe nodes. Output is stamped DEV_ONLY_NOT_OFFICIAL.")
     ap.add_argument("--step", type=float, default=0.1, help="routing grid step in metres")
@@ -236,12 +237,25 @@ def main():
 
     sys.path.insert(0, os.getcwd())
     try:
-        import adapter
+        import adapter_person_c as adapter
         import assign
         import geometry
         from visualize import draw
-        with open(args.pkl, "rb") as f:
-            raw = pickle.load(f)[args.index]
+        if args.json:
+            from shapely.geometry import shape
+
+            with open(args.json, "r") as f:
+                raw = json.load(f)
+
+            for key, value in raw.items():
+                if isinstance(value, dict) and value.get("type") in (
+                    "Polygon", "MultiPolygon", "GeometryCollection"
+                ):
+                    raw[key] = shape(value)
+        else:
+            with open(args.pkl, "rb") as f:
+                raw = pickle.load(f)[args.index]
+
         g = geometry.load_plan(raw)
         plan = adapter.make_plan(g)
 
