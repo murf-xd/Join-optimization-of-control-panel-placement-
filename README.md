@@ -133,3 +133,11 @@ Priorities are reproducible official-format input support, validation against fi
 ## Disclaimer
 
 Educational research prototype only. It has not been certified for real electrical installation or validated by the organisers' official checker.
+
+## Project Demonstration
+
+**Plan 14433 — Development Demo**
+
+![Floor-plan visualization showing hub placement and closed-loop cable routing](docs/images/plan_14433_demo.png)
+
+*Generated using genuine ResPlan geometry with development-generated nodes. Not an official benchmark result.*
